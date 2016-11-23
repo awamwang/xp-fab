@@ -1,0 +1,14 @@
+{
+  "name": "xp-fab",
+  "version": "0.1.1",
+  "description": "floating action button group",
+  "main": "index.vue",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fab"
+  ],
+  "author": "",
+  "license": "MIT"
+}
