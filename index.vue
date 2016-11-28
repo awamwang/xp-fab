@@ -1,29 +1,36 @@
 <template>
   <template v-if="show">
-    <div class="xp_fab">
-      <span class='ink' v-show="fabInkShow"></span>
-      <div class="sub_fab_btns_wrapper" :style="subFabWrapperStyle" v-show="subFabsShow">
-        <div v-for="fab in subFabs">
-          <button @click="subFabClick(fab)"
-                  :data-link-title="fab.title || 'item' + ($index + 1)"
-                  :data-link-href="fab.url"
-                  :data-link-target="fab.target"
-                  class="sub_fab_btn"
-                  :style="subFabStyle(fab)">
-            <span :style="subFabIconStyle(fab)"><i class="iconfont icon-shangji"></i></span>
-          </button>
+    <div class="xp_fab" v-el:fab>
+      <div>
+        <span class='ink' v-show="fabInkShow"></span>
+        <div v-el:sub-fabs class="sub_fab_btns_wrapper" :style="subFabWrapperStyle" v-show="subFabsShow">
+          <div v-for="fab in subFabs">
+            <button @click="subFabClick(fab)"
+                    :data-link-title="fab.title || 'item' + ($index + 1)"
+                    :data-link-href="fab.url"
+                    :data-link-target="fab.target"
+                    class="sub_fab_btn"
+                    :style="subFabStyle(fab)">
+              <span :style="subFabIconStyle(fab)">{{{ fab.icon }}}</span>
+            </button>
+          </div>
         </div>
+        <button v-el:main-fab
+                v-if="mainFabShow"
+                :draggable="draggable"
+                @touchstart="handleTouchStart"
+                @touchmove="handleTouchMove"
+                @touchend="handleTouchEnd"
+                @click="mainFabClick"
+                :data-link-href="mainFabHref"
+                :data-link-target="mainFabTarget"
+                class="kc_fab_main_btn"
+                :class="{'open': subFabsShow && subFabs}"
+                :style="mainFabStyle">
+          <span class="ink animate" style="height: 60px; width: 60px; top: 2.34344px; left: 11.3434px;"></span>
+          <span :style="mainFabIconStyle">{{{ mainFab.icon }}}</span>
+        </button>
       </div>
-      <button v-if="mainFabShow"
-              @click="mainFabClick"
-              :data-link-href="mainFabHref"
-              :data-link-target="mainFabTarget"
-              class="kc_fab_main_btn"
-              :class="{'open': subFabsShow && subFabs}"
-              :style="mainFabStyle">
-        <span class="ink animate" style="height: 60px; width: 60px; top: 2.34344px; left: 11.3434px;"></span>
-        <span :style="mainFabIconStyle">{{ mainFab.icon }}</span>
-      </button>
     </div>
     <div class="xp_fab_overlay" v-if="fabOverlayShow" @click="subFabsShow = !subFabsShow"></div>
   </template>
@@ -33,6 +40,7 @@
   export default {
     data () {
       return {
+        switchPos: {},
         subFabsShow: false,
         fabInkShow: false
       }
@@ -42,9 +50,34 @@
         type: Boolean,
         default: true
       },
+      draggable: {
+        type: Boolean,
+        default: false
+      },
       links: {
         type: [String, Array],
         require: true
+      }
+    },
+    ready () {
+      if (this.mainFab.url && (this.subFabs && this.subFabs.length > 0)) {
+        console.log('url of main-fab will be ingnored, because there are sub-fabs')
+      }
+      var switchX = localStorage.getItem('fab_switch_x')
+      var switchY = localStorage.getItem('fab_switch_y')
+      if (switchX && switchY) {
+        this.switchPos.x = switchX
+        this.switchPos.y = switchY
+        this.$els.fab.style.right = switchX + 'px'
+        this.$els.fab.style.bottom = switchY + 'px'
+      } else if (this.mainFab.right && this.mainFab.bottom) {
+        if (typeof this.mainFab.right !== 'number' || typeof this.mainFab.bottom !== 'number') {
+          console.log('right/bottom in links item must be number')
+        }
+        this.switchPos.x = this.mainFab.right
+        this.switchPos.y = this.mainFab.bottom
+        this.$els.fab.style.right = this.mainFab.right + 'px'
+        this.$els.fab.style.bottom = this.mainFab.bottom + 'px'
       }
     },
     computed: {
@@ -66,8 +99,6 @@
         this.mainFab.iconSize && _.extend(style, { fontSize: this.mainFab.iconSize })
         this.mainFab.width && _.extend(style, { width: this.mainFab.width })
         this.mainFab.height && _.extend(style, { height: this.mainFab.height })
-        this.mainFab.right && _.extend(style, { right: this.mainFab.right })
-        this.mainFab.bottom && _.extend(style, { bottom: this.mainFab.bottom })
         return style
       },
       mainFabIconStyle () {
@@ -77,6 +108,7 @@
       subFabWrapperStyle () {
         let style = {}
         this.mainFab.right && _.extend(style, { right: this.mainFab.right })
+        this.mainFab.bottom && _.extend(style, { right: this.mainFab.bottom })
         return style
       }
     },
@@ -108,15 +140,18 @@
         }
       },
       mainFabClick () {
-        this.openHref(this.mainFab)
-        this.showSubFabs()
-        if (this.subFabsShow) {
-          if (this.mainFab.onOpen) {
-            this.mainFab.onOpen()
-          }
+        if (!this.subFabs || this.subFabs.length === 0) {
+          this.openHref(this.mainFab)
         } else {
-          if (this.mainFab.onClose) {
-            this.mainFab.onClose()
+          this.showSubFabs()
+          if (this.subFabsShow) {
+            if (this.mainFab.onOpen) {
+              this.mainFab.onOpen()
+            }
+          } else {
+            if (this.mainFab.onClose) {
+              this.mainFab.onClose()
+            }
           }
         }
         this.fabInkShow = true
@@ -138,6 +173,49 @@
         if (fab.onOpen) {
           fab.onOpen()
         }
+      },
+      handleTouchStart (e) {
+        this.switchPos.startX = e.touches[0].pageX
+        this.switchPos.startY = e.touches[0].pageY
+      },
+      handleTouchMove (e) {
+        if (e.touches.length > 0) {
+          var offsetX = e.touches[0].pageX - this.switchPos.startX
+          var offsetY = e.touches[0].pageY - this.switchPos.startY
+          var x = this.switchPos.x - offsetX
+          var y = this.switchPos.y - offsetY
+          if (x < 0) {
+            x = 0
+          }
+          if (y < 0) {
+            y = 0
+          }
+          if (x + this.$els.mainFab.offsetWidth > document.body.offsetWidth) {
+            x = document.body.offsetWidth - this.$els.mainFab.offsetWidth
+          }
+          if (y + this.$els.mainFab.offsetHeight > document.body.offsetHeight) {
+            y = document.body.offsetHeight - this.$els.mainFab.offsetHeight
+          }
+          this.$els.fab.style.right = x + 'px'
+          this.$els.fab.style.bottom = y + 'px'
+          this.switchPos.endX = x
+          this.switchPos.endY = y
+          e.preventDefault()
+        }
+      },
+      handleTouchEnd (e) {
+        if (this.switchPos.endX !== 0 || this.switchPos.endY !== 0) {
+          this.switchPos.x = this.switchPos.endX
+          this.switchPos.y = this.switchPos.endY
+          this.switchPos.startX = 0
+          this.switchPos.startY = 0
+          this.switchPos.endX = 0
+          this.switchPos.endY = 0
+          if (this.switchPos.x !== NaN && this.switchPos.y !== NaN) {
+            localStorage.setItem('fab_switch_x', this.switchPos.x)
+            localStorage.setItem('fab_switch_y', this.switchPos.y)
+          }
+        }
       }
     }
   }
@@ -156,7 +234,7 @@
 
     .sub_fab_btns_wrapper {
       right: 0;
-      bottom: 75px;
+      bottom: 60px;
       position: absolute;
       display: block;
       opacity: 1;
@@ -206,8 +284,8 @@
       height: 60px;
       border-radius: 100%;
       background: #F44336;
-      right: 16px;
-      bottom: 16px;
+      right: 0;
+      bottom: 0;
       position: absolute;
       margin-right: 0;
       margin-bottom: 0;

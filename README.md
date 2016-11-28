@@ -1,4 +1,4 @@
-## getting started
+# getting started
 
 > fab是个vue组件
 
@@ -21,8 +21,8 @@ fabLinks: [
             'width': '40px',
             'height': '40px',
             'iconSize': '30px',
-            'right': '5%',
-            'bottom': '10%'
+            'right': 15,
+            'bottom': 15
           },
           {
             'url': '#/moments/user/001228',
@@ -48,4 +48,15 @@ fabLinks: [
         ]
 ```
 
-## more
+# caveat
+
++ right/bottom设定初始位置时，只能使用数字类型
+
+# more
+
+# remark
+
++ 图标（icon）使用了非安全的{{{}}}解析，当其用户可配时要考虑XSS攻击[](http://vuejs.org.cn/api/#v-html)
+
+# release
++ 0.2.1 添加可拖动特性
