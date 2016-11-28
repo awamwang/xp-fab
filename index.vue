@@ -12,6 +12,7 @@
                     class="sub_fab_btn"
                     :style="subFabStyle(fab)">
               <span :style="subFabIconStyle(fab)">{{{ fab.icon }}}</span>
+              <slot name="sub-{{icon}}"></slot>
             </button>
           </div>
         </div>
@@ -29,6 +30,7 @@
                 :style="mainFabStyle">
           <span class="ink animate" style="height: 60px; width: 60px; top: 2.34344px; left: 11.3434px;"></span>
           <span :style="mainFabIconStyle">{{{ mainFab.icon }}}</span>
+          <slot name="main"></slot>
         </button>
       </div>
     </div>
@@ -193,8 +195,8 @@
           if (x + this.$els.mainFab.offsetWidth > document.body.offsetWidth) {
             x = document.body.offsetWidth - this.$els.mainFab.offsetWidth
           }
-          if (y + this.$els.mainFab.offsetHeight > document.body.offsetHeight) {
-            y = document.body.offsetHeight - this.$els.mainFab.offsetHeight
+          if (y + this.$els.fab.offsetHeight > document.body.offsetHeight) {
+            y = document.body.offsetHeight - this.$els.fab.offsetHeight
           }
           this.$els.fab.style.right = x + 'px'
           this.$els.fab.style.bottom = y + 'px'
