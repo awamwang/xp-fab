@@ -2,7 +2,7 @@
   <template v-if="show">
     <div class="xp_fab" v-el:fab>
       <div>
-        <span class='ink' v-show="fabInkShow"></span>
+        <!--<span class='ink' v-show="fabInkShow" v-el:ink></span>-->
         <div v-el:sub-fabs class="sub_fab_btns_wrapper" :style="subFabWrapperStyle" v-show="subFabsShow">
           <div v-for="fab in subFabs">
             <button @click="subFabClick(fab)"
@@ -97,10 +97,10 @@
       },
       mainFabStyle () {
         let style = {}
-        this.mainFab.bgcolor && _.extend(style, { backgroundColor: this.mainFab.bgcolor })
-        this.mainFab.iconSize && _.extend(style, { fontSize: this.mainFab.iconSize })
-        this.mainFab.width && _.extend(style, { width: this.mainFab.width })
-        this.mainFab.height && _.extend(style, { height: this.mainFab.height })
+        this.mainFab.bgcolor && Object.assign(style, { backgroundColor: this.mainFab.bgcolor })
+        this.mainFab.iconSize && Object.assign(style, { fontSize: this.mainFab.iconSize })
+        this.mainFab.width && Object.assign(style, { width: this.mainFab.width })
+        this.mainFab.height && Object.assign(style, { height: this.mainFab.height })
         return style
       },
       mainFabIconStyle () {
@@ -109,20 +109,20 @@
       },
       subFabWrapperStyle () {
         let style = {}
-        this.mainFab.right && _.extend(style, { right: this.mainFab.right })
-        this.mainFab.bottom && _.extend(style, { right: this.mainFab.bottom })
+        this.mainFab.right && Object.assign(style, { right: this.mainFab.right })
+        this.mainFab.bottom && Object.assign(style, { right: this.mainFab.bottom })
         return style
       }
     },
     methods: {
       subFabStyle (fab) {
         let style = {}
-        fab.bgcolor && _.extend(style, { backgroundColor: fab.bgcolor })
+        fab.bgcolor && Object.assign(style, { backgroundColor: fab.bgcolor })
         return style
       },
       subFabIconStyle (fab) {
         let style = {}
-        fab.iconColor && _.extend(style, { color: fab.iconColor })
+        fab.iconColor && Object.assign(style, { color: fab.iconColor })
         return style
       },
       openHref (fab) {
@@ -156,12 +156,11 @@
             }
           }
         }
-        this.fabInkShow = true
-        // ink = $(this).find(".ink");
-        //
-        // if(!ink.height() && !ink.width()){
-        //   d = Math.max($(this).outerWidth(), $(this).outerHeight());
-        //   ink.css({height: d, width: d});
+        // this.fabInkShow = true
+        // var ink = this.$els
+        // if (!ink.height && !ink.width) {
+        //   d = Math.max(this.$els.fab.outerWidth, this.$els.fab.outerHeight)
+        //   ink.css({height: d, width: d})
         // }
         //
         // x = e.pageX - $(this).offset().left - ink.width()/2;
@@ -172,8 +171,8 @@
       subFabClick (fab) {
         this.subFabsShow = !this.subFabsShow
         this.openHref(fab)
-        if (fab.onOpen) {
-          fab.onOpen()
+        if (fab.onClick) {
+          fab.onClick()
         }
       },
       handleTouchStart (e) {
@@ -313,17 +312,17 @@
       -webkit-transform: rotate(45deg);
     }
 
-    .ink {
-      display: block;
-      position: absolute;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 100%;
-      -webkit-transform: scale(0);
-      -moz-transform: scale(0);
-      -o-transform: scale(0);
-      transform: scale(0);
-      pointer-events: all;
-    }
+    /*.ink {*/
+      /*display: block;*/
+      /*position: absolute;*/
+      /*background: rgba(255, 255, 255, 0.3);*/
+      /*border-radius: 100%;*/
+      /*-webkit-transform: scale(0);*/
+      /*-moz-transform: scale(0);*/
+      /*-o-transform: scale(0);*/
+      /*transform: scale(0);*/
+      /*pointer-events: all;*/
+    /*}*/
 
     .animate {
       -webkit-animation: ripple 0.65s linear;
