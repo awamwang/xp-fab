@@ -212,7 +212,7 @@
           this.switchPos.startY = 0
           this.switchPos.endX = 0
           this.switchPos.endY = 0
-          if (this.switchPos.x !== NaN && this.switchPos.y !== NaN) {
+          if (this.switchPos.x > 0 && this.switchPos.y > 0) {
             localStorage.setItem('fab_switch_x', this.switchPos.x)
             localStorage.setItem('fab_switch_y', this.switchPos.y)
           }
