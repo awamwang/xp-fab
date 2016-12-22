@@ -1,6 +1,6 @@
 {
   "name": "xp-fab",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "floating action button group",
   "main": "index.vue",
   "scripts": {

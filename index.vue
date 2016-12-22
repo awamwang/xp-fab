@@ -6,7 +6,7 @@
         <div v-el:sub-fabs class="sub_fab_btns_wrapper" :style="subFabWrapperStyle" v-show="subFabsShow">
           <div v-for="fab in subFabs">
             <button @click="subFabClick(fab)"
-                    :data-link-title="fab.title || 'item' + ($index + 1)"
+                    :data-link-title="fab.title"
                     :data-link-href="fab.url"
                     :data-link-target="fab.target"
                     class="sub_fab_btn"
@@ -171,6 +171,7 @@
       subFabClick (fab) {
         this.subFabsShow = !this.subFabsShow
         this.openHref(fab)
+        console.log(fab)
         if (fab.onClick) {
           fab.onClick()
         }
@@ -280,11 +281,10 @@
     }
 
     button.kc_fab_main_btn {
-      background-color: #F44336;
       width: 60px;
       height: 60px;
       border-radius: 100%;
-      background: #F44336;
+      background-color: #F44336;
       right: 0;
       bottom: 0;
       position: absolute;
@@ -306,7 +306,6 @@
     }
 
     .open {
-      transform: scale(1.1);
       transform: rotate(45deg);
       -ms-transform: rotate(45deg);
       -webkit-transform: rotate(45deg);
@@ -362,7 +361,6 @@
   }
 
   .xp_fab_overlay {
-    z-index: 9998;
     position: fixed;
     top: 0;
     left: 0;
