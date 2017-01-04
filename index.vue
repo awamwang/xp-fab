@@ -70,17 +70,19 @@
       if (switchX && switchY) {
         this.switchPos.x = switchX
         this.switchPos.y = switchY
-        this.$els.fab.style.right = switchX + 'px'
-        this.$els.fab.style.bottom = switchY + 'px'
       } else if (this.mainFab.right && this.mainFab.bottom) {
         if (typeof this.mainFab.right !== 'number' || typeof this.mainFab.bottom !== 'number') {
           console.log('right/bottom in links item must be number')
         }
         this.switchPos.x = this.mainFab.right
         this.switchPos.y = this.mainFab.bottom
-        this.$els.fab.style.right = this.mainFab.right + 'px'
-        this.$els.fab.style.bottom = this.mainFab.bottom + 'px'
+      } else {
+        this.switchPos.x = 50
+        this.switchPos.y = 50
       }
+
+      this.$els.fab.style.right = this.switchPos.x + 'px'
+      this.$els.fab.style.bottom = this.switchPos.y + 'px'
     },
     computed: {
       mainFab () {
@@ -196,7 +198,7 @@
             x = document.body.offsetWidth - this.$els.mainFab.offsetWidth
           }
           if (y + this.$els.fab.offsetHeight > document.body.offsetHeight) {
-            y = document.body.offsetHeight - this.$els.fab.offsetHeight
+            y = document.body.offsetHeight - this.$els.mainFab.offsetHeight
           }
           this.$els.fab.style.right = x + 'px'
           this.$els.fab.style.bottom = y + 'px'

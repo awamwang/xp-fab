@@ -17,7 +17,7 @@ fabLinks: [
           {
             'url': null,
             'bgcolor': 'red',
-            'icon': '+',
+            'icon': '<svg> | <icon>',   // 直接使用字符目前支持不好
             'width': '40px',
             'height': '40px',
             'iconSize': '30px',
@@ -60,3 +60,4 @@ fabLinks: [
 
 # release
 + 0.2.1 添加可拖动特性
++ 0.2.5 位置记录相关问题修复
